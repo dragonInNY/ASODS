@@ -3,7 +3,7 @@
 import numpy as np
 rng = np.random.default_rng(24601)
 
-def generate_data(A_size, B_size, card_constraint):
+def generate_coverage(A_size, B_size, card_constraint):
     '''
     Function: 
         Coverage functions map from elements in A to N, i.e. # of elements in B. 
@@ -51,7 +51,7 @@ def split_set(input_set, num_subsets, size_subset):
         input_set -= output_sets[-1]
     return output_sets
 
-def coverage_func(A, coverage):
+def cov_func(A, coverage):
     '''
         Function:
             Evalute a subset of A based on a coverage relationship
@@ -61,7 +61,22 @@ def coverage_func(A, coverage):
         covered_set = covered_set.union(coverage[a])
     return len(covered_set)
 
-coverage, opt_ele = generate_data(5, 10, 3)
+def marg_cov_func( A, a, coverage):
+    '''
+        Function:
+            Evalute marginal contribution f_A(a)
+    '''
+
+    if isinstance(a, set):
+        return cov_func(A.union(a), coverage) - cov_func(A, coverage) 
+    
+    return cov_func(A.union({a}), coverage) - cov_func(A, coverage) 
+
+coverage, opt_ele = generate_coverage(5, 10, 3)
 print(coverage)
 print(opt_ele)
-print(coverage_func(opt_ele, coverage))
+print(cov_func(opt_ele, coverage))
+
+A = {4,3}
+a = {2}
+print(marg_cov_func(A,a, coverage))
