@@ -1,7 +1,7 @@
 ## Generate data -- data structures where coverage functions can be run on
 
 import numpy as np
-rng = np.random.default_rng(24601)
+rng = None
 
 def generate_coverage(A_size, B_size, card_constraint):
     '''
@@ -28,7 +28,7 @@ def generate_coverage(A_size, B_size, card_constraint):
         subset = rng.choice(range(B_size), subset_size)
         coverage[a] = set(subset)
 
-    opt_elements = rng.choice(range(A_size), card_constraint)
+    opt_elements = rng.choice(range(A_size), card_constraint, replace = False)
     B_split = split_set(B, card_constraint, max_size)
 
     for i, opt_element in enumerate(opt_elements):

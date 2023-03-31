@@ -1,11 +1,9 @@
 ## The optimization algorithms: Greedy, Adaptive Sequencing, etc
 
-import coverage_function as cf
 import numpy as np
-rng = np.random.default_rng(24601)
+import icecream as ic
 
-coverage, opt_elements = cf.generate_coverage(5, 10, 3)
-f = lambda A, a = None : cf.cov_func(coverage, A, a)
+rng = None
 
 def greedy(f, k, N):
     '''
@@ -45,19 +43,20 @@ def adaptive_sequencing(f, k, N, OPT, eps):
     iter = 0
 
     while len(S)<k and iter < 1/eps:
-        X = N, 
+        X = N
         t = (1-eps)*(OPT-f(S))/k
 
         while len(X)!= 0 and len(S) <k:
+
             a = random_sequence(k, S, X)
-            X_is = np.zeros(len(a))
+            X_is = []
 
             # Calculate X_i
             for i in range(len(a)):
 
                 S_i = S.union(set( a[:i+1]))
                 X_i = find_X_i(S_i, f, X, t)
-                X_is[i] = X_i
+                X_is.append(X_i)
 
             # Find i*
             for i in range(len(X_is)):
@@ -96,11 +95,14 @@ def random_sequence(k, S, X):
             samples: np.array
     
     '''
+
+    surviving_X = list(X - S)
     num_sample = k - len(S)
-    samples = rng.choice(list(X), num_sample, replace=False)
+
+    if num_sample > len(surviving_X):
+        return surviving_X
+    
+    samples = rng.choice(surviving_X, num_sample, replace=False)
 
     return samples
 
-#Testing Greedy
-print(coverage)
-print(greedy(f, 3, set(range(5))))
