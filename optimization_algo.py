@@ -5,7 +5,7 @@ import numpy as np
 rng = np.random.default_rng(24601)
 
 coverage, opt_elements = cf.generate_coverage(5, 10, 3)
-f = lambda A, a=None : cf.cov_func(coverage, A, a)
+f = lambda A, a = None : cf.cov_func(coverage, A, a)
 
 def greedy(f, k, N):
     '''
@@ -25,7 +25,7 @@ def greedy(f, k, N):
             if f(S, x) > f_s:
                 X_s = x
                 f_s = f(S, x)
-        S = S.union(X_s)
+        S.add(X_s)
         N.remove(X_s)
 
     return S
@@ -101,7 +101,6 @@ def random_sequence(k, S, X):
 
     return samples
 
-
-
-
-
+#Testing Greedy
+print(coverage)
+print(greedy(f, 3, set(range(5))))
