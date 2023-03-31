@@ -6,11 +6,10 @@ rng = np.random.default_rng(24601)
 def generate_coverage(A_size, B_size, card_constraint):
     '''
     Function: 
-        Coverage functions map from elements in A to N, i.e. # of elements in B. 
-        Construct a mapping from A to B so that coverage funcs can be evaluated.
+        Construct a coverage with known optimal solution
 
     Input: 
-        A_size, B_size
+        A_size, B_size: sizes of the two sets
         card_constraint: cardinality constraint
 
     Output: 
@@ -51,32 +50,39 @@ def split_set(input_set, num_subsets, size_subset):
         input_set -= output_sets[-1]
     return output_sets
 
-def cov_func(A, coverage):
+def cov_func(coverage, A, a = None):
     '''
         Function:
-            Evalute a subset of A based on a coverage relationship
+            One input: evalute a set based on a coverage. 
+            Two inputs: evalute marginal contribution of a to A
     '''
+
+    if a is not None:
+        return marg_cov_func(coverage, A, a)
+    
     covered_set = set()
     for a in A:
         covered_set = covered_set.union(coverage[a])
     return len(covered_set)
 
-def marg_cov_func( A, a, coverage):
+def marg_cov_func( coverage, A, a):
     '''
         Function:
             Evalute marginal contribution f_A(a)
     '''
 
     if isinstance(a, set):
-        return cov_func(A.union(a), coverage) - cov_func(A, coverage) 
+        return cov_func(coverage, A.union(a)) - cov_func(coverage, A) 
     
-    return cov_func(A.union({a}), coverage) - cov_func(A, coverage) 
+    return cov_func(coverage, A.union({a})) - cov_func(coverage, A) 
 
-coverage, opt_ele = generate_coverage(5, 10, 3)
-print(coverage)
-print(opt_ele)
-print(cov_func(opt_ele, coverage))
+# Testing:
+# coverage, opt_ele = generate_coverage(5, 10, 3)
+# print(coverage)
+# print(opt_ele)
+# print(cov_func(coverage, opt_ele))
 
-A = {4,3}
-a = {2}
-print(marg_cov_func(A,a, coverage))
+# A = {4,3}
+# a = {2}
+# print(marg_cov_func(coverage, A, a))
+# print( cov_func(coverage, A, a))
