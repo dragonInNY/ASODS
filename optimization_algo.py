@@ -7,6 +7,29 @@ rng = np.random.default_rng(24601)
 coverage, opt_elements = cf.generate_coverage(5, 10, 3)
 f = lambda A, a=None : cf.cov_func(coverage, A, a)
 
+def greedy(f, k, N):
+    '''
+        Function:
+            Run greedy algorithm on f
+        
+        Input:
+            f: submodular function
+            k: integer, cardinality constraint
+            N: set, the universe
+    '''
+    S = set()
+    while len(S) < k:
+        X_s = None
+        f_s = 0
+        for x in N:
+            if f(S, x) > f_s:
+                X_s = x
+                f_s = f(S, x)
+        S = S.union(X_s)
+        N.remove(X_s)
+
+    return S
+
 def adaptive_sequencing(f, k, N, OPT, eps):
     '''
         Function:
