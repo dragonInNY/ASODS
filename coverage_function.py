@@ -54,7 +54,7 @@ def cov_func(coverage, A, a = None):
     '''
         Function:
             One input: evalute a set based on a coverage. 
-            Two inputs: evalute marginal contribution of a to A
+            Two inputs: evalute marginal contribution of a to A, where a can be set/element
     '''
 
     if a is not None:

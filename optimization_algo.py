@@ -69,6 +69,9 @@ def adaptive_sequencing(f, k, N, OPT, eps):
 
     return S
 
+def Vondrak():
+    pass
+
 # Auxiliary Functions
 
 # Need Parallel
@@ -105,4 +108,29 @@ def random_sequence(k, S, X):
     samples = rng.choice(surviving_X, num_sample, replace=False)
 
     return samples
+
+# Need Parallel
+def ThresholdGreedy(f, S, G, tau, k):
+
+    G_prime = G.copy()
+
+    for e in S:
+        if f(G,e) >= tau and len(G_prime) < k:
+            G_prime = G_prime + {e}
+
+# Need Parallel
+def ThresholdFilter(f, S, G, tau):
+    S_prime = S.copy()
+
+    for e in S:
+        if f(G,e) < tau:
+            S_prime = S_prime - {e}
+
+    return S_prime
+
+def PartitionAndSample(V):
+
+    S = set()
+
+    pass
 
