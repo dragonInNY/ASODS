@@ -128,9 +128,24 @@ def ThresholdFilter(f, S, G, tau):
 
     return S_prime
 
-def PartitionAndSample(V):
+# Need Parallel
+def PartitionAndSample(V, m, p):
+    '''
+        Function:
+            S = Sample every element in V with prob p. Partition V into m sets.
+    '''
 
     S = set()
+    probs_S = rng.uniform(size = len(V))
+    probs_V_i = rng.integers( m, size = len(V))
 
-    pass
+    V_is = [set() for _ in range(m)]
+
+    for i, element in enumerate(V):
+        if probs_S[i] <= p:
+            S.add(element)
+        
+        V_is[probs_V_i[i]].add(element)
+        
+    return S, V_is
 
