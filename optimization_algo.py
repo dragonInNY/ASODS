@@ -43,7 +43,7 @@ def adaptive_sequencing(f, k, N, OPT, eps):
     iter = 0
 
     while len(S)<k and iter < 1/eps:
-        X = N
+        X = N.copy()
         t = (1-eps)*(OPT-f(S))/k
 
         while len(X)!= 0 and len(S) <k:
@@ -60,7 +60,7 @@ def adaptive_sequencing(f, k, N, OPT, eps):
 
             # Find i*
             for i in range(len(X_is)):
-                if len(X_is[i]) < (1 - eps) * len(N):
+                if len(X_is[i]) < (1 - eps) * len(X):
                     i_star = i
                     break
 

@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 AS_performance = []
 TRM_performance = []
 
-for N_size in range(20, 110, 10):
+for N_size in range(20, 60, 10):
 
     max_cover = N_size * 10
     k = int(N_size /3)
