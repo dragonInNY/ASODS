@@ -60,7 +60,7 @@ def adaptive_sequencing(f, k, N, OPT, eps):
 
             # Find i*
             for i in range(len(X_is)):
-                if len(X_is[i]) < (1 - eps) * len(N):
+                if len(X_is[i]) < (1 - eps) * len(X):
                     i_star = i
                     break
 
@@ -68,6 +68,45 @@ def adaptive_sequencing(f, k, N, OPT, eps):
             X = X_is[i_star]
 
     return S
+
+def modified_ThresholdGreedy(f, S, G, tau, k, eps):
+    '''
+        Function:
+            Run Adaptive Sequencing algorithm on f
+        
+        Input:
+            f: submodular function
+            S: input set
+            G: partial greedy solution
+            tau: threshold
+            k: integer, cardinality constraint
+    '''
+
+    X = S.copy()
+    G_prime = G.copy()
+
+    while len(X) != 0 and len(G_prime) < k:
+
+        a = random_sequence(k, G_prime, X)
+        X_is = []
+
+        # Calculate X_i
+        for i in range(len(a)):
+
+            G_i = G_prime.union(set(a[:i+1]))
+            X_i = find_X_i(G_i, f, X, tau)
+            X_is.append(X_i)
+
+        # Find i*
+        for i in range(len(X_is)):
+            if len(X_is[i]) <= (1 - eps) * len(X):
+                i_star = i
+                break
+
+        G_prime = G_prime.union(a[: i_star + 1])
+        X = X_is[i_star]
+
+    return G_prime
 
 def two_round_MapReduce(f, k, V, OPT, m):
     '''
@@ -101,6 +140,43 @@ def two_round_MapReduce(f, k, V, OPT, m):
             R.union(R_i)
         
         return ThresholdGreedy(f, R, G_0, tau, k)
+
+    else:
+
+        return G_0
+
+def modified_MapReduce(f, k, V, OPT, m, eps):
+    '''
+        Function:
+            Run two round MapReduce on f
+
+        Input:
+            f: submodular function
+            k: integer, cardinality constraint
+            V: set, the universe
+            OPT: estimated optimal value
+            m: integer, number of machines
+
+    '''
+
+    p = 4 * np.sqrt(k/len(V))
+    S, V_is = PartitionAndSample(V, m, p)
+
+    # Should be run on each machine
+    # Need modification when run on distributed system
+    tau = 0.5 * OPT/k
+    G_0 = modified_ThresholdGreedy(f, S, set(), tau, k, eps)
+
+    if len(G_0) < k:
+
+        R = set()
+        
+        for V_i in V_is:
+            print('checkV_i')
+            R_i = ThresholdFilter(f, V_i, G_0, tau)
+            R.union(R_i)
+        
+        return modified_ThresholdGreedy(f, R, G_0, tau, k, eps)
 
     else:
 
