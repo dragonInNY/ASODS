@@ -69,8 +69,43 @@ def adaptive_sequencing(f, k, N, OPT, eps):
 
     return S
 
-def Vondrak():
-    pass
+def two_round_MapReduce(f, k, V, OPT, m):
+    '''
+        Function:
+            Run two round MapReduce on f
+
+        Input:
+            f: submodular function
+            k: integer, cardinality constraint
+            V: set, the universe
+            OPT: estimated optimal value
+            m: integer, number of machines
+
+    '''
+
+    p = 4 * np.sqrt(k/len(V))
+    S, V_is = PartitionAndSample(V, m, p)
+
+    # Should be run on each machine
+    # Need modification when run on distributed system
+    tau = 0.5 * OPT/k
+    G_0 = ThresholdGreedy(f, S, set(), tau, k)
+
+    if len(G_0) < k:
+
+        R = set()
+        
+        for V_i in V_is:
+            print('checkV_i')
+            R_i = ThresholdFilter(f, V_i, G_0, tau)
+            R.union(R_i)
+        
+        return ThresholdGreedy(f, R, G_0, tau, k)
+
+    else:
+
+        return G_0
+
 
 # Auxiliary Functions
 
@@ -115,8 +150,11 @@ def ThresholdGreedy(f, S, G, tau, k):
     G_prime = G.copy()
 
     for e in S:
+
         if f(G,e) >= tau and len(G_prime) < k:
-            G_prime = G_prime + {e}
+            G_prime.add(e)
+
+    return G_prime
 
 # Need Parallel
 def ThresholdFilter(f, S, G, tau):
@@ -132,7 +170,7 @@ def ThresholdFilter(f, S, G, tau):
 def PartitionAndSample(V, m, p):
     '''
         Function:
-            S = Sample every element in V with prob p. Partition V into m sets.
+            S = Sample every element in V with prob p. Partition V into m subsets.
     '''
 
     S = set()
