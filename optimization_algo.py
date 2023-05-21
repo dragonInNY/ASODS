@@ -98,13 +98,18 @@ def modified_ThresholdGreedy(f, S, G, tau, k, eps):
             X_is.append(X_i)
 
         # Find i*
+        i_star = -1
+        
         for i in range(len(X_is)):
             if len(X_is[i]) <= (1 - eps) * len(X):
                 i_star = i
                 break
 
-        G_prime = G_prime.union(a[: i_star + 1])
-        X = X_is[i_star]
+        if i_star == -1:
+            continue
+        else: 
+            G_prime = G_prime.union(a[: i_star + 1])
+            X = X_is[i_star]
 
     return G_prime
 
@@ -172,7 +177,6 @@ def modified_MapReduce(f, k, V, OPT, m, eps):
         R = set()
         
         for V_i in V_is:
-            print('checkV_i')
             R_i = ThresholdFilter(f, V_i, G_0, tau)
             R.union(R_i)
         

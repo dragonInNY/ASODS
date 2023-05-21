@@ -65,7 +65,7 @@ def cov_func(coverage, A, a = None):
         covered_set = covered_set.union(coverage[a])
     return len(covered_set)
 
-def marg_cov_func( coverage, A, a):
+def marg_cov_func(coverage, A, a):
     '''
         Function:
             Evalute marginal contribution f_A(a)
