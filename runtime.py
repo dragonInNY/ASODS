@@ -23,7 +23,7 @@ TRM_time = []
 MM_time = []
 
 # List of Cardinality constraints for testing
-card_constraints = np.linspace(10, 100, num = 10, dtype = int)
+card_constraints = np.linspace(10, 20, num = 10, dtype = int)
 
 for k in card_constraints:
 
@@ -64,10 +64,10 @@ size = "16"
 
 plt.figure(figsize=(20,10))
 
-plt.plot(k, GR_time, label = "Greedy")
-plt.plot(k, AS_time, label = "Adaptive Sequencing")
-plt.plot(k, TRM_time, label = "2-round MapReduce")
-plt.plot(k, MM_time, label = "Modified MapReduce")
+plt.plot(card_constraints, GR_time, label = "Greedy")
+plt.plot(card_constraints, AS_time, label = "Adaptive Sequencing")
+plt.plot(card_constraints, TRM_time, label = "2-round MapReduce")
+plt.plot(card_constraints, MM_time, label = "Modified MapReduce")
 
 plt.xticks(fontsize = size)
 plt.yticks(fontsize = size)
@@ -77,3 +77,4 @@ plt.ylabel("Runtime $(s)$", fontsize = size)
 
 plt.title("Comparison of Submodular Maximization Algorithms (Sequential) on Coverage Function with Bipartite Graphs ($|A| = 200, |B| = 5000$)", fontsize = size)
 plt.legend(fontsize = size)
+plt.show()
