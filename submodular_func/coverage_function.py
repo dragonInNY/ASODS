@@ -61,8 +61,14 @@ def cov_func(coverage, A, a = None):
         return marg_cov_func(coverage, A, a)
     
     covered_set = set()
-    for a in A:
-        covered_set = covered_set.union(coverage[a])
+
+    if isinstance(A, set):
+        for a in A:
+            covered_set.update(coverage[a])
+
+    else:
+        covered_set.update(coverage[A])
+    
     return len(covered_set)
 
 def marg_cov_func( coverage, A, a):
@@ -76,13 +82,4 @@ def marg_cov_func( coverage, A, a):
     
     return cov_func(coverage, A.union({a})) - cov_func(coverage, A) 
 
-# Testing:
-# coverage, opt_ele = generate_coverage(5, 10, 3)
-# print(coverage)
-# print(opt_ele)
-# print(cov_func(coverage, opt_ele))
 
-# A = {4,3}
-# a = {2}
-# print(marg_cov_func(coverage, A, a))
-# print( cov_func(coverage, A, a))
